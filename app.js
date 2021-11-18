@@ -3,6 +3,9 @@ const ctx=canvas.getContext('2d');
 const colors=document.getElementsByClassName("controls_color jsColor");
 const brush=document.getElementById("jsRange");
 const mode=document.getElementById("jsMode");
+const saveBtn=document.getElementById("jsSava");
+const dropBtn=document.getElementById("jsDrop");
+
 const Inital_color="2c2c2c";
 const Canvas_SIZE = 700;
 
@@ -13,6 +16,8 @@ ctx.strokeStyle = Inital_color;
 //그릴 선의 색깔
 ctx.lineWidth=2.5;
 //그 선의 넓이
+ctx.fillStyle="white";
+ctx.fillRect(0,0, Canvas_SIZE, Canvas_SIZE );
 ctx.fillStyle=Inital_color;
 
 
@@ -69,13 +74,29 @@ function hadleCanvasClick(){
         ctx.fillRect(0,0, Canvas_SIZE, Canvas_SIZE );
     }
 }
-
+function handleCM(event){
+    event.preventDefault() //우클릭 눌러도 저장안되게 하는 거
+}
+function handSaveClick(){
+    const image=canvas.toDataURL("image/png");
+    const link=document.createElement("a");
+    link.href=image;
+    link.download="PaintJS[🎨]";
+    link.click();
+}
+function handleDrop(){
+    window.location.reload();
+}
 if(canvas){
     canvas.addEventListener("mousemove", onMouseMove);
     canvas.addEventListener("mousedown", startPaint);
     canvas.addEventListener("mouseup", stopPainting);
     canvas.addEventListener("mouseleave", stopPainting);
     canvas.addEventListener("click", hadleCanvasClick);
+    canvas.addEventListener("contextmenu", handleCM);
+}
+if(saveBtn){
+    saveBtn.addEventListener("click", handSaveClick);
 }
 
 Array.from(colors).forEach(color=>color.addEventListener("click",handleColor));
@@ -85,4 +106,7 @@ if(brush){
 }
 if(mode){
     mode.addEventListener("click", handleModeClick);
+}
+if(dropBtn){
+    dropBtn.addEventListener("click", handleDrop);
 }
